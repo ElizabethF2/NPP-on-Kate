@@ -17,7 +17,7 @@ var katescript = {
       "b64decode", "b64decode_strict", "b64decode_by_line",
       "quote_printed_encode", "quote_printed_decode",
       "url_encode", "full_url_encode", "url_decode",
-      "ascii_to_hex", "hex_to_ascii",
+      "ascii_to_hex", "hex_to_ascii"
     ],
     "actions": [
         {"function": "b64encode",
