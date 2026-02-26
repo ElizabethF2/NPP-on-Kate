@@ -1,6 +1,7 @@
-OVERRIDE_LINK_MATCH_ON_SELECT = False
+import sys, os, re, webbrowser
 
-import sys, re, webbrowser
+OVERRIDE_LINK_MATCH_ON_SELECT = os.environ.get('OVERRIDE_LINK_MATCH_ON_SELECT',
+                                               False)
 
 URL_PATTERN = r'[a-zA-Z0-9\-]+\:\/\/[^\s]+\.[^\s]+'
 # This pattern will match many non-legal URLs.
@@ -49,7 +50,8 @@ else:
         elif char_before in ("'", '"'):
           for i, c in enumerate(url):
             if c == char_before and url[i-2:i] != '\\\\':
-              url =  (url[:i] if hasattr(url, 'decode') else bytes(url[:i], 'utf8')).decode('unicode_escape')
+              url =  ((url[:i] if hasattr(url, 'decode')
+                       else bytes(url[:i], 'utf8')).decode('unicode_escape'))
               break
 
         # Remove the trailing bracket from URLs enclosed in one of the bracket pairs

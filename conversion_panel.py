@@ -5,8 +5,13 @@ try:
 except ImportError:
   import Tkinter as tkinter
 
-BGCOLOR = 'white'
 FONT = ('Arial', 10)
+
+FGCOLOR = 'white'
+BGCOLOR = 'black'
+
+# FGCOLOR = 'black'
+# BGCOLOR = 'white'
 
 KEY_NAMES = (
   'NULL', 'SOH', 'STX', 'ETX', 'EOT', 'ENQ', 'ACK', 'BEL', 'BS', 'TAB', 'LF',
@@ -52,6 +57,9 @@ def on_text_change(tbox, *args):
   new_value = tbox.get()
   if not new_value:
     return
+  if len(new_value) > 1 and tbox.format == 'ASCII':
+    new_value = new_value[-1]
+    tbox.delete(0, tkinter.END)
   root = tbox.master
   try:
     root.current_char = parse_char(new_value, tbox.format)
@@ -81,44 +89,44 @@ def insert_clicked(root, format):
 def make_root():
   root = tkinter.Tk()
   root.title('Conversion')
-  root.configure(bg=BGCOLOR)
+  root.configure(bg = BGCOLOR)
   root.vars = []
   root.current_char = 0
 
+  style = {'font': FONT, 'fg': FGCOLOR, 'bg': BGCOLOR}
   for idx, format in enumerate(FORMATS):
-    label = tkinter.Label(root, text=format+':', font=FONT, bg=BGCOLOR)
+    label = tkinter.Label(root, text=format+':', **style)
     label.grid(row=idx, column=0, columnspan=3)
 
     sv = tkinter.StringVar()
     tbox = tkinter.Entry(root,
-                         width=2 if format == 'ASCII' else 40,
-                         font=FONT,
-                         bg=BGCOLOR,
-                         textvariable=sv)
-    tbox.grid(row=idx, column=3, columnspan=1 if format == 'ASCII' else 40)
+                         width = 2 if format == 'ASCII' else 40,
+                         textvariable = sv,
+                         **style)
+    tbox.grid(row = idx, column = 3, columnspan = 1 if format == 'ASCII' else 40)
     tbox.format = format
-    sv.trace('w', functools.partial(on_text_change, tbox))
+    sv.trace_add('write', functools.partial(on_text_change, tbox))
     root.vars.append(sv)
 
     if format == 'ASCII':
-      key_label = tkinter.Label(root, text='', font=FONT, bg=BGCOLOR)
+      key_label = tkinter.Label(root, text='', **style)
       key_label.grid(row=idx, column=4, columnspan=10)
       key_label.is_key_label = True
 
     copy_button = tkinter.Button(root,
-                                 text='Copy',
-                                 font=FONT,
-                                 command=functools.partial(copy_clicked, root, format))
-    copy_button.grid(row=idx, column=50, columnspan=2)
+                                 text = 'Copy',
+                                 command = functools.partial(copy_clicked, root, format),
+                                 **style)
+    copy_button.grid(row = idx, column = 50, columnspan = 2)
 
     insert_button = tkinter.Button(root,
-                                   text='Insert',
-                                   font=FONT,
-                                   command=functools.partial(insert_clicked, root, format))
-    insert_button.grid(row=idx, column=52, columnspan=2)
+                                   text = 'Insert',
+                                   command = functools.partial(insert_clicked, root, format),
+                                   **style)
+    insert_button.grid(row = idx, column = 52, columnspan = 2)
 
   for child in root.winfo_children():
-    child.grid_configure(padx=8, pady=5)
+    child.grid_configure(padx = 8, pady = 5)
 
   return root
 
