@@ -7,11 +7,12 @@ except ImportError:
 
 FONT = ('Arial', 10)
 
-FGCOLOR = 'white'
-BGCOLOR = 'black'
-
-# FGCOLOR = 'black'
-# BGCOLOR = 'white'
+if 'light' in sys.argv:
+  FGCOLOR = 'black'
+  BGCOLOR = 'white'
+else:
+  FGCOLOR = 'white'
+  BGCOLOR = 'black'
 
 KEY_NAMES = (
   'NULL', 'SOH', 'STX', 'ETX', 'EOT', 'ENQ', 'ACK', 'BEL', 'BS', 'TAB', 'LF',
